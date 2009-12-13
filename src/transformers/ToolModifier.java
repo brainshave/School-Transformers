@@ -11,5 +11,5 @@ package transformers;
  */
 public interface ToolModifier {
     Matrix getMatrix();
-    void setNotifiedObject(Object o);
+    void setNotifiedObject(ImageTransformer it);
 }

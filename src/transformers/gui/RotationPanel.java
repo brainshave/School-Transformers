@@ -8,39 +8,51 @@
  *
  * Created on 2009-12-07, 14:58:47
  */
-
 package transformers.gui;
 
-import javax.swing.InputVerifier;
-import javax.swing.JComponent;
-import javax.swing.JSpinner;
+import org.jdesktop.beansbinding.Converter;
+import transformers.ImageTransformer;
+import transformers.Matrix;
+import transformers.ToolModifier;
 
 /**
  *
  * @author szymon
  */
-public class RotationPanel extends javax.swing.JPanel {
-    InputVerifier degreeVerifier;
-    /** Creates new form RotationPanel */
-    public RotationPanel() {
-        degreeVerifier = new InputVerifier() {
+public class RotationPanel extends javax.swing.JPanel implements ToolModifier {
+
+    public Converter getConv() {
+        return new Converter<Integer, Integer>() {
 
             @Override
-            public boolean verify(JComponent input) {
-                int value = -1;
-                JSpinner spinner = null;
-                if (input != null && input instanceof JSpinner) {
-                    spinner = (JSpinner) input;
-                    value = (Integer) spinner.getValue();
+            public Integer convertForward(Integer value) {
+                return value;
+            }
 
-                    if (value < 0) value = 360;
-                    else if (value > 360) value = 0;
-                    spinner.setValue(Integer.valueOf(value));
-                }
-                return true;
+            @Override
+            public Integer convertReverse(Integer value) {
+                return value;
             }
         };
+    }
+    ImageTransformer it;
+    public static float dgToRad = (float) Math.PI / 180;
+
+    /** Creates new form RotationPanel */
+    public RotationPanel() {
         initComponents();
+    }
+
+    public Matrix getMatrix() {
+        float xRads = dgToRad * xSlider.getValue();
+        float yRads = dgToRad * ySlider.getValue();
+        return new Matrix(
+                (float) Math.cos(xRads), -(float) Math.sin(yRads),
+                (float) Math.sin(xRads), (float) Math.cos(yRads));
+    }
+
+    public void setNotifiedObject(ImageTransformer it) {
+        this.it = it;
     }
 
     /** This method is called from within the constructor to
@@ -51,64 +63,108 @@ public class RotationPanel extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
-        jSlider1 = new javax.swing.JSlider();
+        xSpinner = new javax.swing.JSpinner();
+        xSlider = new javax.swing.JSlider();
         jSeparator1 = new javax.swing.JSeparator();
         jPanel2 = new javax.swing.JPanel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jSpinner2 = new javax.swing.JSpinner();
-        jSlider2 = new javax.swing.JSlider();
+        unsynchroYCheckBox = new javax.swing.JCheckBox();
+        ySpinner = new javax.swing.JSpinner();
+        ySlider = new javax.swing.JSlider();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
-        jPanel1.setLayout(new java.awt.GridLayout());
+        jPanel1.setLayout(new java.awt.GridLayout(1, 0));
 
-        jLabel1.setText("Rotacja x:");
+        jLabel1.setText("x:");
+        jLabel1.setAlignmentX(0.9F);
         jPanel1.add(jLabel1);
 
-        jSpinner1.setEditor(new javax.swing.JSpinner.NumberEditor(jSpinner2, ""));
-        jPanel1.add(jSpinner1);
+        xSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 360, 1));
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, xSlider, org.jdesktop.beansbinding.ELProperty.create("${value}"), xSpinner, org.jdesktop.beansbinding.BeanProperty.create("value"));
+        binding.setConverter(getConv());
+        bindingGroup.addBinding(binding);
+
+        jPanel1.add(xSpinner);
 
         add(jPanel1);
 
-        jSlider1.setMaximum(360);
-        jSlider1.setValue(0);
-        add(jSlider1);
+        xSlider.setMaximum(360);
+        xSlider.setValue(0);
+        xSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                xSliderStateChanged(evt);
+            }
+        });
+        add(xSlider);
 
         jSeparator1.setMinimumSize(new java.awt.Dimension(10, 10));
         add(jSeparator1);
 
-        jPanel2.setLayout(new java.awt.GridLayout());
+        jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
-        jCheckBox1.setText("Inna dla y:");
-        jPanel2.add(jCheckBox1);
+        unsynchroYCheckBox.setText("Inna dla y:");
+        unsynchroYCheckBox.setAlignmentX(0.9F);
+        unsynchroYCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                unsynchroYCheckBoxActionPerformed(evt);
+            }
+        });
+        jPanel2.add(unsynchroYCheckBox);
 
-        jSpinner2.setEditor(new javax.swing.JSpinner.NumberEditor(jSpinner2, ""));
-        jSpinner2.setEnabled(false);
-        jPanel2.add(jSpinner2);
+        ySpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 360, 1));
+        ySpinner.setEditor(new javax.swing.JSpinner.NumberEditor(ySpinner, ""));
+        ySpinner.setEnabled(false);
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, ySlider, org.jdesktop.beansbinding.ELProperty.create("${value}"), ySpinner, org.jdesktop.beansbinding.BeanProperty.create("value"));
+        binding.setConverter(getConv());
+        bindingGroup.addBinding(binding);
+
+        jPanel2.add(ySpinner);
 
         add(jPanel2);
 
-        jSlider2.setMaximum(360);
-        jSlider2.setValue(0);
-        jSlider2.setEnabled(false);
-        add(jSlider2);
+        ySlider.setMaximum(360);
+        ySlider.setValue(0);
+        ySlider.setEnabled(false);
+        add(ySlider);
+
+        bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void unsynchroYCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unsynchroYCheckBoxActionPerformed
+        if (unsynchroYCheckBox.isSelected()) {
+            ySlider.setEnabled(true);
+            ySpinner.setEnabled(true);
+        } else {
+            ySlider.setEnabled(false);
+            ySpinner.setEnabled(false);
+            ySlider.setValue(xSlider.getValue());
+        }
+}//GEN-LAST:event_unsynchroYCheckBoxActionPerformed
+
+    private void xSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_xSliderStateChanged
+        // TODO add your handling code here:
+        //System.out.println("CHANGE" + xSlider.getValue());
+        if (!ySlider.isEnabled()) {
+            ySlider.setValue(xSlider.getValue());
+        }
+}//GEN-LAST:event_xSliderStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JLabel jLabel1;
+    protected javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSlider jSlider1;
-    private javax.swing.JSlider jSlider2;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
+    protected javax.swing.JCheckBox unsynchroYCheckBox;
+    protected javax.swing.JSlider xSlider;
+    protected javax.swing.JSpinner xSpinner;
+    protected javax.swing.JSlider ySlider;
+    protected javax.swing.JSpinner ySpinner;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
-
 }
