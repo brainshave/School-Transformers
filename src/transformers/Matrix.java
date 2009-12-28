@@ -26,11 +26,19 @@ public class Matrix {
         this.d = d;
     }
 
-    Matrix multiply(Matrix m) {
+    public Matrix multiply(Matrix m) {
         return new Matrix(
                 a * m.a + b * m.c,
                 a * m.b + b * m.d,
                 c * m.a + d * m.c,
                 c * m.b + d * m.d);
     }
+	
+	public Matrix multiply(float i) {
+		return new Matrix(a * i, b * i, c * i, d * i);
+	}
+
+	public Matrix inverse() {
+		return (new Matrix(d, -b, -c, a)).multiply(1f/(a*d - b*c));
+	}
 }

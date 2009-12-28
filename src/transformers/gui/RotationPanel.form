@@ -24,7 +24,6 @@
     <Component class="javax.swing.JSlider" name="xSlider">
       <Properties>
         <Property name="maximum" type="int" value="360"/>
-        <Property name="value" type="int" value="0"/>
       </Properties>
       <Events>
         <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="xSliderStateChanged"/>
@@ -98,9 +97,11 @@
     <Component class="javax.swing.JSlider" name="ySlider">
       <Properties>
         <Property name="maximum" type="int" value="360"/>
-        <Property name="value" type="int" value="0"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
+      <Events>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="ySliderStateChanged"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
       </AuxValues>

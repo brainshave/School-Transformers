@@ -15,7 +15,7 @@ import transformers.Matrix;
 public class ScalePanel extends RotationPanel {
 
     public ScalePanel() {
-        super();
+        super(true);
         xSpinner.setModel(new SpinnerNumberModel(1d, 0.01d, 10d, 0.1d));
         ySpinner.setModel(new SpinnerNumberModel(1d, 0.01d, 10d, 0.1d));
         xSpinner.setEditor(new javax.swing.JSpinner.NumberEditor(xSpinner, "#0.000"));
@@ -24,8 +24,8 @@ public class ScalePanel extends RotationPanel {
 
     @Override
     public Matrix getMatrix() {
-        return new Matrix((Float) xSpinner.getValue(), 0,
-                0, (Float) ySpinner.getValue());
+        return new Matrix(((Double) xSpinner.getValue()).floatValue(), 0,
+                0, ((Double) ySpinner.getValue()).floatValue());
     }
 
     @Override

@@ -11,18 +11,36 @@
 
 package transformers.gui;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import transformers.ImageTransformer;
+
 /**
  *
  * @author szymon
  */
 public class ImagePanel extends javax.swing.JPanel {
 
+	private BufferedImage image;
+
+	public BufferedImage getImage() {
+		return image;
+	}
+
+	public void setImage(BufferedImage image) {
+		this.image = image;
+	}
+	private ImageTransformer transformer;
     /** Creates new form ImagePanel */
     public ImagePanel() {
         initComponents();
     }
 
-    
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.drawImage(image, 0, 0, null);
+	}
 
     /** This method is called from within the constructor to
      * initialize the form.
