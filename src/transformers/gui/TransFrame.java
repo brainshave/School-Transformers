@@ -82,9 +82,11 @@ public class TransFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         addTransformButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel3 = new javax.swing.JPanel();
         controlsPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         imageButton = new javax.swing.JButton();
+        imagePanel1 = new transformers.gui.ImagePanel();
 
         addScaleAction.setText("Skalowanie");
         addScaleAction.addActionListener(new java.awt.event.ActionListener() {
@@ -102,7 +104,12 @@ public class TransFrame extends javax.swing.JFrame {
         });
         transformsMenu.add(addRotationAction);
 
-        addBendAction.setText("Pochelenie");
+        addBendAction.setText("Pochylenie");
+        addBendAction.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBendActionActionPerformed(evt);
+            }
+        });
         transformsMenu.add(addBendAction);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -123,8 +130,12 @@ public class TransFrame extends javax.swing.JFrame {
         jScrollPane1.setMinimumSize(new java.awt.Dimension(250, 22));
         jScrollPane1.setPreferredSize(new java.awt.Dimension(250, 200));
 
+        jPanel3.setLayout(new java.awt.BorderLayout());
+
         controlsPanel.setLayout(new javax.swing.BoxLayout(controlsPanel, javax.swing.BoxLayout.PAGE_AXIS));
-        jScrollPane1.setViewportView(controlsPanel);
+        jPanel3.add(controlsPanel, java.awt.BorderLayout.PAGE_START);
+
+        jScrollPane1.setViewportView(jPanel3);
 
         jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
@@ -141,6 +152,21 @@ public class TransFrame extends javax.swing.JFrame {
         jPanel2.add(imageButton);
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.NORTH);
+
+        imagePanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        javax.swing.GroupLayout imagePanel1Layout = new javax.swing.GroupLayout(imagePanel1);
+        imagePanel1.setLayout(imagePanel1Layout);
+        imagePanel1Layout.setHorizontalGroup(
+            imagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 656, Short.MAX_VALUE)
+        );
+        imagePanel1Layout.setVerticalGroup(
+            imagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 515, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(imagePanel1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -165,6 +191,12 @@ public class TransFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         readImage();
     }//GEN-LAST:event_imageButtonActionPerformed
+
+    private void addBendActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBendActionActionPerformed
+        // TODO add your handling code here:
+        controlsPanel.add(new ToolPanel("Pochylenie", new BendPanel()));
+        controlsPanel.revalidate();
+    }//GEN-LAST:event_addBendActionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -198,8 +230,10 @@ public class TransFrame extends javax.swing.JFrame {
     private javax.swing.JButton addTransformButton;
     private javax.swing.JPanel controlsPanel;
     private javax.swing.JButton imageButton;
+    private transformers.gui.ImagePanel imagePanel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu transformsMenu;
     // End of variables declaration//GEN-END:variables

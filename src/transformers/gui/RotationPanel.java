@@ -63,35 +63,19 @@ public class RotationPanel extends javax.swing.JPanel implements ToolModifier {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        jPanel1 = new javax.swing.JPanel();
+        xSlider = new javax.swing.JSlider();
+        ySpinner = new javax.swing.JSpinner();
+        unsynchroYCheckBox = new javax.swing.JCheckBox();
+        jSeparator1 = new javax.swing.JSeparator();
+        ySlider = new javax.swing.JSlider();
         jLabel1 = new javax.swing.JLabel();
         xSpinner = new javax.swing.JSpinner();
-        xSlider = new javax.swing.JSlider();
-        jSeparator1 = new javax.swing.JSeparator();
-        jPanel2 = new javax.swing.JPanel();
-        unsynchroYCheckBox = new javax.swing.JCheckBox();
-        ySpinner = new javax.swing.JSpinner();
-        ySlider = new javax.swing.JSlider();
 
-        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
-
-        jPanel1.setLayout(new java.awt.GridLayout(1, 0));
-
-        jLabel1.setText("x:");
-        jLabel1.setAlignmentX(0.9F);
-        jPanel1.add(jLabel1);
-
-        xSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 360, 1));
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, xSlider, org.jdesktop.beansbinding.ELProperty.create("${value}"), xSpinner, org.jdesktop.beansbinding.BeanProperty.create("value"));
-        binding.setConverter(getConv());
-        bindingGroup.addBinding(binding);
-
-        jPanel1.add(xSpinner);
-
-        add(jPanel1);
+        setPreferredSize(new java.awt.Dimension(172, 108));
+        setLayout(new java.awt.GridBagLayout());
 
         xSlider.setMaximum(360);
         xSlider.setValue(0);
@@ -100,38 +84,89 @@ public class RotationPanel extends javax.swing.JPanel implements ToolModifier {
                 xSliderStateChanged(evt);
             }
         });
-        add(xSlider);
-
-        jSeparator1.setMinimumSize(new java.awt.Dimension(10, 10));
-        add(jSeparator1);
-
-        jPanel2.setLayout(new java.awt.GridLayout(1, 0));
-
-        unsynchroYCheckBox.setText("Inna dla y:");
-        unsynchroYCheckBox.setAlignmentX(0.9F);
-        unsynchroYCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                unsynchroYCheckBoxActionPerformed(evt);
-            }
-        });
-        jPanel2.add(unsynchroYCheckBox);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 15, 0, 15);
+        add(xSlider, gridBagConstraints);
 
         ySpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 360, 1));
         ySpinner.setEditor(new javax.swing.JSpinner.NumberEditor(ySpinner, ""));
         ySpinner.setEnabled(false);
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, ySlider, org.jdesktop.beansbinding.ELProperty.create("${value}"), ySpinner, org.jdesktop.beansbinding.BeanProperty.create("value"));
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, ySlider, org.jdesktop.beansbinding.ELProperty.create("${value}"), ySpinner, org.jdesktop.beansbinding.BeanProperty.create("value"));
         binding.setConverter(getConv());
         bindingGroup.addBinding(binding);
 
-        jPanel2.add(ySpinner);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 14);
+        add(ySpinner, gridBagConstraints);
 
-        add(jPanel2);
+        unsynchroYCheckBox.setText("y:");
+        unsynchroYCheckBox.setAlignmentX(0.9F);
+        unsynchroYCheckBox.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        unsynchroYCheckBox.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        unsynchroYCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                unsynchroYCheckBoxActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.ipadx = 15;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        add(unsynchroYCheckBox, gridBagConstraints);
+
+        jSeparator1.setMinimumSize(new java.awt.Dimension(10, 10));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipady = 7;
+        add(jSeparator1, gridBagConstraints);
 
         ySlider.setMaximum(360);
         ySlider.setValue(0);
         ySlider.setEnabled(false);
-        add(ySlider);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 15, 0, 15);
+        add(ySlider, gridBagConstraints);
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("x:");
+        jLabel1.setAlignmentX(0.9F);
+        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 3);
+        add(jLabel1, gridBagConstraints);
+
+        xSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 360, 1));
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, xSlider, org.jdesktop.beansbinding.ELProperty.create("${value}"), xSpinner, org.jdesktop.beansbinding.BeanProperty.create("value"));
+        binding.setConverter(getConv());
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 14);
+        add(xSpinner, gridBagConstraints);
 
         bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
@@ -157,8 +192,6 @@ public class RotationPanel extends javax.swing.JPanel implements ToolModifier {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
     protected javax.swing.JCheckBox unsynchroYCheckBox;
     protected javax.swing.JSlider xSlider;
