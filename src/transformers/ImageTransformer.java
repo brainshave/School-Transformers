@@ -35,8 +35,10 @@ public class ImageTransformer extends Thread {
 		this.moveY = 0;
 
 		this.completedLines = height;
-		this.outBuff = new int[0];
-		imPanel.setImage(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
+        int outWidth = imPanel.getWidth() + 200;
+        int outHeight = imPanel.getHeight() + 200;
+		this.outBuff = new int[outWidth * outHeight];
+		imPanel.setImage(new BufferedImage(outWidth, outHeight, BufferedImage.TYPE_INT_RGB));
 		this.start();
 		this.interrupt();
 	}
@@ -121,7 +123,7 @@ public class ImageTransformer extends Thread {
 //			for(;)
 //		}
 		//completedLines = oY;
-		++oY;
+		//++oY;
 		imPanel.getImage().getRaster().setDataElements(0, 0, oW, oY, outBuff);
 		imPanel.repaint(0, 0, oW, oY);
 		
