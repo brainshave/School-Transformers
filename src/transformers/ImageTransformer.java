@@ -79,8 +79,8 @@ public class ImageTransformer extends Thread {
 		int oH = imPanel.getHeight();
 		int oW2 = oW / 2;
 		int oH2 = oH / 2;
-		int inW2 = inW/2;
-		int inH2 = inH/2;
+		int inW2 = inW << 7;
+		int inH2 = inH << 7;
 		int oX, oY, oXtmp, oYtmp;
 		int iX, iY;
 		int outOffset = 0, inOffset = 0;
@@ -101,11 +101,12 @@ public class ImageTransformer extends Thread {
 			for (oX = 0; oX < oW; ++oX) {
 				oXtmp = oX - oW2;
 				oYtmp = oY - oH2;
-				iX = ((a * oXtmp + b * oYtmp) >> 8) + inW2;
-				iY = ((c * oXtmp + d * oYtmp) >> 8) + inH2;
+				iX = (a * oXtmp + b * oYtmp + inW2) >> 8;
+				iY = (c * oXtmp + d * oYtmp + inH2) >> 8;
 
 				inOffset = iY * inW + iX;
-				if (inOffset > 0 && inOffset < inSize) {
+				//if (inOffset > 0 && inOffset < inSize) {
+				if(iX > 0 && iX < inW && iY > 0 && iY < inH) {
 					outBuff[outOffset] = inBuff[inOffset];
 				} else {
 					outBuff[outOffset] = -1;
