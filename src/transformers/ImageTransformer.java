@@ -18,6 +18,7 @@ public class ImageTransformer extends Thread {
     private int[] inBuff, outBuff;
     private int inW, inH, moveX, moveY, completedLines;
     private final ImagePanel imPanel;
+    private int maxX = Integer.MIN_VALUE, minX = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE, minY = Integer.MAX_VALUE;
 
     public ImageTransformer(LinkedList<ToolModifier> modifiers, int[] buff, int width, int height, ImagePanel imPanel) {
         this.modifiers = modifiers;
@@ -85,104 +86,141 @@ public class ImageTransformer extends Thread {
         int inH2 = inH << 7;
         int oX, oY, oXtmp, oYtmp;
         int iX, iY;
+        int g;
         int up, down, left, right, i;
         int upProp, downProp, leftProp, rightProp;
-        int outOffset = 0, inOffset = 0;
-        int inSize = inBuff.length;
+        int outOffset = 0;
         int pixel;
-        int pixelUp, pixelDown;
+        int localMaxX = Integer.MIN_VALUE, localMinX = Integer.MAX_VALUE, localMaxY = Integer.MIN_VALUE, localMinY = Integer.MAX_VALUE;
+        int tmp;
         int[] pixels = {-1, -1, -1, -1};
         int[] colors = {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255};
         int[] props = new int[12];
 
-//		while (k < size) {
-//                if (this.isInterrupted()) {
-//                    return i;
-//                }
-//                i = k;
-//                k += step;
-//                end = k < size ? k : size;
-//                for (; i < end; ++i) {
+        for (g = 0; g < 8 && !this.isInterrupted(); g += 1) {
+            outOffset = g * oW;
+            for (oY = g; oY < oH; oY += 8) {
+                for (oX = 0; oX < oW; ++oX) {
+                    oXtmp = oX - oW2;
+                    oYtmp = oY - oH2;
+                    iX = a * oXtmp + b * oYtmp + inW2;
+                    iY = c * oXtmp + d * oYtmp + inH2;
 
-//		//
-        for (oY = 0; oY < oH && !this.isInterrupted(); ++oY) {
-            for (oX = 0; oX < oW; ++oX) {
-                oXtmp = oX - oW2;
-                oYtmp = oY - oH2;
-                iX = a * oXtmp + b * oYtmp + inW2;
-                iY = c * oXtmp + d * oYtmp + inH2;
+                    left = iX >> 8;
+                    right = left + 1;
+                    down = iY >> 8;
+                    up = down + 1;
 
-                left = iX >> 8;
-                right = left + 1;
-                down = iY >> 8;
-                up = down + 1;
+                    rightProp = iX & 0xff;
+                    leftProp = 0xff - rightProp;
+                    upProp = iY & 0xff;
+                    downProp = 0xff - upProp;
 
-                rightProp = iX & 0xff;
-                leftProp = 0xff - rightProp;
-                upProp = iY & 0xff;
-                downProp = 0xff - upProp;
+                    props[0] = props[1] = props[2] = leftProp * downProp;
+                    props[3] = props[4] = props[5] = rightProp * downProp;
+                    props[6] = props[7] = props[8] = leftProp * upProp;
+                    props[9] = props[10] = props[11] = rightProp * upProp;
 
-                for (i = 0; i < 3; ++i) {
-                    props[i] = leftProp * downProp;
-                    props[i + 3] = rightProp * downProp;
-                    props[i + 6] = leftProp * upProp;
-                    props[i + 9] = rightProp * upProp;
-                }
+                    pixels[0] = pixels[1] = pixels[2] = pixels[3] = -1;
 
-                pixels[0] = pixels[1] = pixels[2] = pixels[3] = -1;
-
-                if (down > 0 && down < inH) {
-                    if (left > 0 && left < inW) {
-                        pixels[0] = inBuff[down * inW + left];
+                    if (down > 0 && down < inH) {
+                        tmp = down * inW;
+                        if (left > 0 && left < inW) {
+                            pixels[0] = inBuff[tmp + left];
+                            if (oX < localMinX) {
+                                localMinX = oX;
+                            }
+                            if (oY < localMinY) {
+                                localMinY = oY;
+                            }
+                        }
+                        if (right > 0 && right < inW) {
+                            pixels[1] = inBuff[tmp + right];
+                            if (oX > localMaxX) {
+                                localMaxX = oX;
+                            }
+                            if (oY < localMinY) {
+                                localMinY = oY;
+                            }
+                        }
                     }
-                    if (right > 0 && right < inW) {
-                        pixels[1] = inBuff[down * inW + right];
+
+                    if (up > 0 && up < inH) {
+                        tmp = up * inW;
+                        if (left > 0 && left < inW) {
+                            pixels[2] = inBuff[tmp + left];
+                            if (oX < localMinX) {
+                                localMinX = oX;
+                            }
+                            if (oY > localMaxY) {
+                                localMaxY = oY;
+                            }
+                        }
+                        if (right > 0 && right < inW) {
+                            pixels[3] = inBuff[tmp + right];
+                            if (oX > localMaxX) {
+                                localMaxX = oX;
+                            }
+                        }
+                        if (oY > localMaxY) {
+                            localMaxY = oY;
+                        }
                     }
-                }
 
-                if (up > 0 && up < inH) {
-                    if (left > 0 && left < inW) {
-                        pixels[2] = inBuff[up * inW + left];
+                    tmp = 0;
+                    for (i = 0; i < 4; ++i) {
+                        colors[tmp] = (pixels[i] & 0xff0000) >> 16;
+                        colors[tmp + 1] = (pixels[i] & 0x00ff00) >> 8;
+                        colors[tmp + 2] = pixels[i] & 0x0000ff;
+                        tmp += 3;
                     }
-                    if (right > 0 && right < inW) {
-                        pixels[3] = inBuff[up * inW + right];
+
+                    for (i = 0; i < 12; ++i) {
+                        colors[i] *= props[i];
                     }
+
+                    pixel = 0;
+                    pixel |= (colors[0] + colors[3] + colors[6] + colors[9]) & 0xff0000;
+                    pixel |= ((colors[1] + colors[4] + colors[7] + colors[10]) >> 8) & 0x00ff00;
+                    pixel |= ((colors[2] + colors[5] + colors[8] + colors[11]) >> 16) & 0x0000ff;
+
+                    outBuff[outOffset] = pixel;
+                    ++outOffset;
                 }
-
-                for (i = 0; i < 4; ++i) {
-                    colors[3 * i] = (pixels[i] & 0xff0000) >> 16;
-                    colors[3 * i + 1] = (pixels[i] & 0x00ff00) >> 8;
-                    colors[3 * i + 2] = pixels[i] & 0x0000ff;
-                }
-
-                for (i = 0; i < 12; ++i) {
-                    colors[i] *= props[i];
-                }
-
-                pixel = 0;
-                pixel |= ((colors[0] + colors[3] + colors[6] + colors[9]) >> 0) & 0xff0000;
-                pixel |= ((colors[1] + colors[4] + colors[7] + colors[10]) >> 8) & 0x00ff00;
-                pixel |= ((colors[2] + colors[5] + colors[8] + colors[11]) >> 16) & 0x0000ff;
-
-                outBuff[outOffset] = pixel;
-                ++outOffset;
+                //imPanel.repaint(oX, oY, oW, 1);
+                outOffset += oW * 7;
             }
         }
-//		int step = 100000;
-//		int outSize = oW * oH;
-//
-//		for(outOffset = 0; outOffset < outSize; outOffset += step) {
-//			for(;)
-//		}
-        //completedLines = oY;
-        //++oY;
-        imPanel.getImage().getRaster().setDataElements(0, 0, oW, oY, outBuff);
-        imPanel.repaint(0, 0, oW, oY);
+        imPanel.getImage().getRaster().setDataElements(0, 0, oW, oH, outBuff);
+        //imPanel.repaint(0, 0, oW, oH);
 
+        if (localMinX < minX) {
+            minX = localMinX;
+        }
+        if (localMinY < minY) {
+            minY = localMinY;
+        }
+        if (localMaxX > maxX) {
+            maxX = localMaxX;
+        }
+        if (localMaxY > maxY) {
+            maxY = localMaxY;
+        }
+        if (this.isInterrupted()) {
+            for (i = (localMinY >> 3) << 3; i < localMaxY; i += 8) {
+                imPanel.repaint(localMinX, i, localMaxX - localMinX, g);
+            }
+        } else {
+            imPanel.repaint(minX - 1, minY - 1, maxX - minX + 3, maxY - minY + 3);
+            minX = localMinX;
+            maxX = localMaxX;
+            minY = localMinY;
+            maxY = localMaxY;
+        }
         // pomiary czasu
         long runTime = System.nanoTime() - startTime;
 
-        System.out.println("" + (oW * oY) + " pikseli w " + runTime / 1000000 + " ms");
+        System.out.println("" + (oW * oH) + " pikseli w " + runTime / 1000000 + " ms");
     }
 
     @Override
