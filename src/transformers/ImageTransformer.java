@@ -65,11 +65,14 @@ public class ImageTransformer extends Thread {
             localCopyModifiers = (LinkedList<ToolModifier>) modifiers.clone();
         }
 
+        moveX = 0;
+        moveY = 0;
         Matrix matrix = new Matrix();
         for (ToolModifier mod : localCopyModifiers) {
             matrix = matrix.multiply(mod.getMatrix());
+            moveX += mod.getMoveX();
+            moveY += mod.getMoveY();
         }
-
 
         ensureBufferSize();
         int oW = imPanel.getWidth();
@@ -90,8 +93,8 @@ public class ImageTransformer extends Thread {
         int[] signums = {-1, 1};
         for (int sig1 : signums) {
             for (int sig2 : signums) {
-                int x = (a * (sig1 * (inW) / 2) + b * (sig2 * (inH) / 2) + (oW << 7)) >> 8;
-                int y = (c * (sig1 * (inW) / 2) + d * (sig2 * (inH) / 2) + (oH << 7)) >> 8;
+                int x = ((a * (sig1 * (inW) / 2) + b * (sig2 * (inH) / 2) + (oW << 7)) >> 8) + moveX;
+                int y = ((c * (sig1 * (inW) / 2) + d * (sig2 * (inH) / 2) + (oH << 7)) >> 8) + moveY;
                 if (x < localMinX) {
                     localMinX = x - 5;
                 }
@@ -137,9 +140,9 @@ public class ImageTransformer extends Thread {
                     iX = a * oXtmp + b * oYtmp + inW2;
                     iY = c * oXtmp + d * oYtmp + inH2;
 
-                    left = iX >> 8;
+                    left = (iX >> 8) + moveX;
                     right = left + 1;
-                    down = iY >> 8;
+                    down = (iY >> 8) + moveY;
                     up = down + 1;
 
                     rightProp = iX & 0xff;

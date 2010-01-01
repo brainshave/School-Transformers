@@ -58,6 +58,16 @@ public class RotationPanel extends javax.swing.JPanel implements ToolModifier {
 				(float) Math.sin(xRads), (float) Math.cos(yRads));
 	}
 
+    public int getMoveX() {
+        return 0;
+    }
+
+    public int getMoveY() {
+        return 0;
+    }
+
+
+
 	public void setNotifiedObject(ImageTransformer it) {
 		this.it = it;
 	}
