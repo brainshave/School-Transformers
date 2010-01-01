@@ -70,13 +70,7 @@ public class ImageTransformer extends Thread {
             matrix = matrix.multiply(mod.getMatrix());
         }
 
-        matrix = matrix.inverse();
-        int a = (int) (matrix.a * 256);
-        int b = (int) (matrix.b * 256);
-        int c = (int) (matrix.c * 256);
-        int d = (int) (matrix.d * 256);
 
-        //main loop:
         ensureBufferSize();
         int oW = imPanel.getWidth();
         int oH = imPanel.getHeight();
@@ -84,6 +78,43 @@ public class ImageTransformer extends Thread {
         int oH2 = oH / 2;
         int inW2 = inW << 7;
         int inH2 = inH << 7;
+        int a, b, c, d;
+
+        int localMaxX = Integer.MIN_VALUE, localMinX = Integer.MAX_VALUE, localMaxY = Integer.MIN_VALUE, localMinY = Integer.MAX_VALUE;
+
+        a = (int) (matrix.a * 256);
+        b = (int) (matrix.b * 256);
+        c = (int) (matrix.c * 256);
+        d = (int) (matrix.d * 256);
+
+        int[] signums = {-1, 1};
+        for (int sig1 : signums) {
+            for (int sig2 : signums) {
+                int x = (a * (sig1 * (inW) / 2) + b * (sig2 * (inH) / 2) + (oW << 7)) >> 8;
+                int y = (c * (sig1 * (inW) / 2) + d * (sig2 * (inH) / 2) + (oH << 7)) >> 8;
+                if (x < localMinX) {
+                    localMinX = x - 5;
+                }
+                if (x > localMaxX) {
+                    localMaxX = x + 5;
+                }
+
+                if(y < localMinY) {
+                    localMinY = y - 5;
+                }
+                if (y > localMaxY) {
+                    localMaxY = y + 5;
+                }
+            }
+        }
+
+        matrix = matrix.inverse();
+        a = (int) (matrix.a * 256);
+        b = (int) (matrix.b * 256);
+        c = (int) (matrix.c * 256);
+        d = (int) (matrix.d * 256);
+
+        //main loop:
         int oX, oY, oXtmp, oYtmp;
         int iX, iY;
         int g;
@@ -91,7 +122,7 @@ public class ImageTransformer extends Thread {
         int upProp, downProp, leftProp, rightProp;
         int outOffset = 0;
         int pixel;
-        int localMaxX = Integer.MIN_VALUE, localMinX = Integer.MAX_VALUE, localMaxY = Integer.MIN_VALUE, localMinY = Integer.MAX_VALUE;
+
         int tmp;
         int[] pixels = {-1, -1, -1, -1};
         int[] colors = {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255};
@@ -127,21 +158,9 @@ public class ImageTransformer extends Thread {
                         tmp = down * inW;
                         if (left > 0 && left < inW) {
                             pixels[0] = inBuff[tmp + left];
-                            if (oX < localMinX) {
-                                localMinX = oX;
-                            }
-                            if (oY < localMinY) {
-                                localMinY = oY;
-                            }
                         }
                         if (right > 0 && right < inW) {
                             pixels[1] = inBuff[tmp + right];
-                            if (oX > localMaxX) {
-                                localMaxX = oX;
-                            }
-                            if (oY < localMinY) {
-                                localMinY = oY;
-                            }
                         }
                     }
 
@@ -149,21 +168,9 @@ public class ImageTransformer extends Thread {
                         tmp = up * inW;
                         if (left > 0 && left < inW) {
                             pixels[2] = inBuff[tmp + left];
-                            if (oX < localMinX) {
-                                localMinX = oX;
-                            }
-                            if (oY > localMaxY) {
-                                localMaxY = oY;
-                            }
                         }
                         if (right > 0 && right < inW) {
                             pixels[3] = inBuff[tmp + right];
-                            if (oX > localMaxX) {
-                                localMaxX = oX;
-                            }
-                        }
-                        if (oY > localMaxY) {
-                            localMaxY = oY;
                         }
                     }
 
@@ -211,7 +218,7 @@ public class ImageTransformer extends Thread {
                 imPanel.repaint(localMinX, i, localMaxX - localMinX, g);
             }
         } else {
-            imPanel.repaint(minX - 1, minY - 1, maxX - minX + 3, maxY - minY + 3);
+            imPanel.repaint(minX, minY, maxX - minX, maxY - minY);
             minX = localMinX;
             maxX = localMaxX;
             minY = localMinY;
@@ -220,7 +227,7 @@ public class ImageTransformer extends Thread {
         // pomiary czasu
         long runTime = System.nanoTime() - startTime;
 
-        System.out.println("" + (oW * oH) + " pikseli w " + runTime / 1000000 + " ms");
+        System.out.println("" + (oW * oH) + " pikseli w " + runTime / 1000000 + " ms " + minX + " " + maxX + " " + minY + " " + maxY);
     }
 
     @Override
