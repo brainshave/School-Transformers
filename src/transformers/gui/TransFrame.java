@@ -107,6 +107,7 @@ public class TransFrame extends javax.swing.JFrame {
         addScaleAction = new javax.swing.JMenuItem();
         addRotationAction = new javax.swing.JMenuItem();
         addBendAction = new javax.swing.JMenuItem();
+        addMoveAction = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         addTransformButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -139,6 +140,14 @@ public class TransFrame extends javax.swing.JFrame {
             }
         });
         transformsMenu.add(addBendAction);
+
+        addMoveAction.setText("Przesunięcie");
+        addMoveAction.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addMoveActionActionPerformed(evt);
+            }
+        });
+        transformsMenu.add(addMoveAction);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Transformers");
@@ -196,7 +205,7 @@ public class TransFrame extends javax.swing.JFrame {
         );
         imagePanelLayout.setVerticalGroup(
             imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 487, Short.MAX_VALUE)
+            .addGap(0, 492, Short.MAX_VALUE)
         );
 
         getContentPane().add(imagePanel, java.awt.BorderLayout.CENTER);
@@ -223,7 +232,7 @@ public class TransFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_imageButtonActionPerformed
 
     private void addBendActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBendActionActionPerformed
-		addPanel("Zginanie", new BendPanel());
+		addPanel("Pochylenie", new BendPanel());
     }//GEN-LAST:event_addBendActionActionPerformed
 
 	private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
@@ -231,6 +240,10 @@ public class TransFrame extends javax.swing.JFrame {
 			transformer.interrupt();
 		}
 	}//GEN-LAST:event_formComponentResized
+
+        private void addMoveActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMoveActionActionPerformed
+            addPanel("Przesunięcie", new MovePanel());
+        }//GEN-LAST:event_addMoveActionActionPerformed
 
 	/**
 	 * @param args the command line arguments
@@ -259,6 +272,7 @@ public class TransFrame extends javax.swing.JFrame {
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addBendAction;
+    private javax.swing.JMenuItem addMoveAction;
     private javax.swing.JMenuItem addRotationAction;
     private javax.swing.JMenuItem addScaleAction;
     private javax.swing.JButton addTransformButton;

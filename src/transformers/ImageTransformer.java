@@ -93,6 +93,10 @@ public class ImageTransformer extends Thread {
         int[] signums = {-1, 1};
         for (int sig1 : signums) {
             for (int sig2 : signums) {
+                //int x = ((a * ((sig1 * (inW) / 2) + moveX) + b * ((sig2 * (inH) / 2) + moveY) + (oW << 7)) >> 8);
+                //int y = ((c * ((sig1 * (inW) / 2) + moveX) + d * ((sig2 * (inH) / 2) + moveY) + (oW << 7)) >> 8);
+                //int x = ((a * (sig1 * ((inW) / 2) + moveX) + b * (sig2 * ((inH) / 2) + moveY) + (oW << 7)) >> 8);
+                //int y = ((c * (sig1 * ((inW) / 2) + moveX) + d * (sig2 * ((inH) / 2) + moveY) + (oH << 7)) >> 8);
                 int x = ((a * (sig1 * (inW) / 2) + b * (sig2 * (inH) / 2) + (oW << 7)) >> 8) + moveX;
                 int y = ((c * (sig1 * (inW) / 2) + d * (sig2 * (inH) / 2) + (oH << 7)) >> 8) + moveY;
                 if (x < localMinX) {
@@ -102,7 +106,7 @@ public class ImageTransformer extends Thread {
                     localMaxX = x + 5;
                 }
 
-                if(y < localMinY) {
+                if (y < localMinY) {
                     localMinY = y - 5;
                 }
                 if (y > localMaxY) {
@@ -110,6 +114,11 @@ public class ImageTransformer extends Thread {
                 }
             }
         }
+//        localMaxX += moveX;
+//        localMinX += moveX;
+//
+//        localMaxY += moveY;
+//        localMinY += moveY;
 
         matrix = matrix.inverse();
         a = (int) (matrix.a * 256);
